@@ -1,5 +1,5 @@
 ##### Order Details R Code #####
-### By: Dhruvin Shah 
+### By: Dhruvin Shah
 
 ##### Data Cleaning #####
 library(tidyr)

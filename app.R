@@ -1,5 +1,5 @@
 ##### Order Details Shiny Web Application #####
-### By: Dhruvin Shah 
+### By: Dhruvin Shah
 
 library(shiny)
 library("DT")
@@ -118,15 +118,6 @@ ui <-
 server <- function(input, output,session) {
     
     suppressWarnings(source("RCode.R"))
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
     
     output$Plot1 <- renderPlot({
         Plot1
