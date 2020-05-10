@@ -1,4 +1,5 @@
 ##### Order Details R Code #####
+### By: Dhruvin Shah 
 
 ##### Data Cleaning #####
 library(tidyr)
@@ -94,6 +95,11 @@ order_sales_profit_customers <- data_order %>%
     summarize(Average_Sales = round(mean(Sales),2), Sales = round(sum(Sales),2),
               Average_Profit = round(mean(Profit),2), Profit = round(sum(Profit),2)) %>%
     as.data.frame()
+order_sales_profit_cust <- order_sales_profit_customers <- data_order %>%
+    group_by(`Customer ID`, `Customer Name`, Segment) %>%
+    summarize(Sales = round(sum(Sales),2),
+              Profit = round(sum(Profit),2)) %>%
+    as.data.frame()
 
 order_sales_profit_category_quantity <- data_order %>%
     group_by(`Sub-Category`) %>%
@@ -135,12 +141,13 @@ formattable(order_sales_profit_globalarea, list(
     Total_Sales = color_bar("lightblue"),
     Total_Profit = sign_formatter))
 
-Table <- formattable(order_sales_profit_globalarea, list(
-    `Global Area` = color_tile("transparent", "lightpink"),
+CustomerDetails <- formattable(order_sales_profit_cust, list(
+    #`Global Area` = color_tile("transparent", "lightpink"),
     #rating = color_bar("lightgreen"),
-    Total_Sales = color_bar("lightblue"),
+    Sales = color_bar("lightblue"),
     #revenue = sign_formatter,
-    Total_Profit = sign_formatter))
+    Profit = sign_formatter))
+CustomerDetails
 
 ##### Data Visualization #####
 library(ggplot2)
@@ -154,6 +161,7 @@ library(ggridges)
 Plot1 <- ggplot(order_sales_profit_region_subcategory, 
        aes(Region, 
            `Sub-Category`)) + 
+    ggtitle("Heatmap of Sales of Sub-Category according to Region") + 
     geom_tile(aes(fill = Sales)) + 
     geom_text(aes(fill = Sales, 
                   label = round(Sales, 2))) + 
@@ -169,7 +177,6 @@ Plot1 <- ggplot(order_sales_profit_region_subcategory,
           axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"), 
           plot.title = element_text(size=20,face="bold"),
           axis.text.y = element_text(size = 12,face = "bold")) + 
-    ggtitle("Heatmap of Sales of Sub-Category according to Region") + 
     theme(legend.title=element_text(face="bold", size=14)) + scale_y_discrete(name="") + 
     scale_x_discrete(name="") + labs(fill="Sales")
 
@@ -181,8 +188,8 @@ order_sales_profit_category_subcategory <- data_order %>%
     summarize(Average_Sales = round(mean(Sales),2), Sales = round(sum(Sales)/1000,2),
               Average_Profit = round(mean(Profit),2), Profit = round(sum(Profit)/1000,2)) %>%
     as.data.frame()
-names(order_sales_profit_category_subcategory)[names(order_sales_profit_category_subcategory) == "Sales"] <- "Sales (In Thousands)"
-names(order_sales_profit_category_subcategory)[names(order_sales_profit_category_subcategory) == "Profit"] <- "Profit (In Thousands)"
+#names(order_sales_profit_category_subcategory)[names(order_sales_profit_category_subcategory) == "Sales"] <- "Sales (In Thousands)"
+#names(order_sales_profit_category_subcategory)[names(order_sales_profit_category_subcategory) == "Profit"] <- "Profit (In Thousands)"
 order_sales_profit_category_subcategory
 
 order_sales_profit_Furniture <- order_sales_profit_category_subcategory[
@@ -197,21 +204,21 @@ order_sales_profit_Technology <- order_sales_profit_category_subcategory[
 #par(mfrow = c(1,3))
 
 p1 <- ggplot(data = order_sales_profit_Furniture, 
-             aes(x = `Sub-Category`, y = order_sales_profit_Furniture$`Sales (In Thousands)`)) +
+             aes(x = `Sub-Category`, y = order_sales_profit_Furniture$Sales)) +
     geom_bar(stat = "identity", fill = "steelblue") +
-    geom_text(aes(label = order_sales_profit_Furniture$`Sales (In Thousands)`), vjust = 1.6, color = "white", size = 2.7) +
+    geom_text(aes(label = order_sales_profit_Furniture$Sales), vjust = 1.6, color = "white", size = 2.7) +
     theme_minimal()
 p1
 
-p2 <- ggplot(data = order_sales_profit_officesupplies, aes(x = `Sub-Category`, y = order_sales_profit_officesupplies$`Sales (In Thousands)`)) +
+p2 <- ggplot(data = order_sales_profit_officesupplies, aes(x = `Sub-Category`, y = order_sales_profit_officesupplies$Sales)) +
     geom_bar(stat = "identity", fill = "steelblue") +
-    geom_text(aes(label = order_sales_profit_officesupplies$`Sales (In Thousands)`), vjust = 1.6, color = "white", size = 2.7) +
+    geom_text(aes(label = order_sales_profit_officesupplies$Sales), vjust = 1.6, color = "white", size = 2.7) +
     theme_minimal()
 p2
 
 p3 <- ggplot(data = order_sales_profit_Technology, aes(x = `Sub-Category`, y = order_sales_profit_Technology$`Sales (In Thousands)`)) +
     geom_bar(stat = "identity", fill = "steelblue") +
-    geom_text(aes(label = order_sales_profit_Technology$`Sales (In Thousands)`), vjust = 1.6, color = "white", size = 2.7) +
+    geom_text(aes(label = order_sales_profit_Technology$Sales), vjust = 1.6, color = "white", size = 2.7) +
     theme_minimal()
 p3
 
@@ -222,9 +229,9 @@ p3
 
 
 Plot2 <- ggplot(data = order_sales_profit_category_subcategory, 
-       aes(x = `Sub-Category`, y = order_sales_profit_category_subcategory$`Sales (In Thousands)`)) +
+       aes(x = `Sub-Category`, y = Sales)) +
     geom_bar(stat = "identity", fill = "steelblue") +
-    geom_text(aes(label = order_sales_profit_category_subcategory$`Sales (In Thousands)`), vjust = 1.6, color = "white", size = 3.5) +
+    geom_text(aes(label = Sales), vjust = 1.6, color = "white", size = 3.5) +
     theme_minimal()
 Plot2
 
@@ -235,6 +242,7 @@ Plot3_Sales <- ggplot(data = order_sales_profit_region_priority,
        aes(x = order_sales_profit_region_priority$Sales, 
            y = order_sales_profit_region_priority$Region,
            fill_palette(order_sales_profit_region_priority$`Order Priority`))) +
+    ggtitle("Sales(In Thousands) according to Sub_Category") +
     geom_bar(stat = "identity", fill = "#CD5C5C") +
     theme_minimal()
     
@@ -242,6 +250,7 @@ Plot3_Sales <- ggplot(data = order_sales_profit_region_priority,
 Plot3_Sales1 <- ggplot(order_sales_profit_region_priority, 
        aes(x = Sales,
            fill = `Order Priority`)) +
+    ggtitle("Sales Distribution according to Order Priority") +
     geom_density(alpha = 0.4)
 Plot3_Sales1
 
@@ -251,7 +260,8 @@ Plot3_Sales2 <- ggplot(order_sales_profit_region_priority,
            fill = Region)) +
     geom_density_ridges() + 
     theme_ridges() +
-    labs("Sales Distribution according to Region") +
+    #labs("Sales Distribution according to Region") +
+    ggtitle("Sales Distribution according to Region") +
     theme(legend.position = "none")
 
 #Profit Data
@@ -259,6 +269,7 @@ Plot3_Sales2 <- ggplot(order_sales_profit_region_priority,
 Plot3_Profit1 <- ggplot(order_sales_profit_region_priority, 
        aes(x = Profit,
            fill = `Order Priority`)) +
+    ggtitle("Profit Distribution according to Order Priority") +
     geom_density(alpha = 0.4)
 
 Plot3_Profit2 <- ggplot(order_sales_profit_region_priority, 

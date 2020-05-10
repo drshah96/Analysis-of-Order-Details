@@ -1,16 +1,10 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+##### Order Details Shiny Web Application #####
+### By: Dhruvin Shah 
 
 library(shiny)
 library("DT")
 
-# Define UI for application that draws a histogram
+# Define UI for application
 ui <- 
     navbarPage(
         "Analysis of Order Details",
@@ -21,34 +15,38 @@ ui <-
                 # Application title
                 titlePanel("Order Details Data Visualization"),
                 
-                # Sidebar with a slider input for number of bins 
-#                sidebarLayout(
-#                    sidebarPanel(
-#                        sliderInput("bins",
-#                                    "Number of bins:",
-#                                    min = 1,
-#                                    max = 50,
-#                                    value = 30)
-#                    ),
-                    
-                    # Show a plot of the generated distribution
-#                    mainPanel(
-#                        plotOutput("distPlot")
-#                    )
-#                )
+                # Main Panel 
+                mainPanel(
+                    h3("Data Description", align = "left"),
+                    p("The data contains information about orders placed from 2011 to 2014. 
+                      The variables of dataset depict the vital information like Order ID, Order Date, Return Product Details, Shipping Details, Priority of Order, Countries along with Sales Quantity as well as Profit."),
+                )
+                
             )
         ),
         
         tabPanel(
-            "Heatmap of Sales of Sub-Category according to Region",
+            "Sales of Sub-Category according to Region",
             fluidPage(
+                mainPanel(
+                    h3("HeatMap (Matrix)", align = "left"),
+                    p("Heatmaps visualise data through variations in colouring. 
+                      When applied to a tabular format, Heatmaps are useful for cross-examining multivariate data, through placing variables in the rows and columns and colouring the cells within the table."),
+                    p(br()),
+                ),
                 plotOutput("Plot1")
             )
         ),
         
         tabPanel(
-            "Sales of Category",
+            "Sales of Sub-Category",
             fluidPage(
+                mainPanel(
+                    h3("BarPlot", align = "left"),
+                    p("A bar plot represents an estimate of central tendency for a numeric variable with the height of each rectangle and provides some indication of the uncertainty around that estimate using error bars. 
+                      Bar plots include 0 in the quantitative axis range, and they are a good choice when 0 is a meaningful value for the quantitative variable, and you want to make comparisons against it."),
+                    p(br()),
+                ),
                 plotOutput("Plot2")
             )
         ),
@@ -56,6 +54,13 @@ ui <-
         tabPanel(
             "Sales and Profit of Product according to region and Order Priority",
             fluidPage(
+                mainPanel(
+                    h3("Ridgeline Plot", align = "left"),
+                    p("A Ridgeline plot (sometimes called Joyplot) shows the distribution of a numeric value for several groups. 
+                      Distribution can be represented using histograms or density plots, all aligned to the same horizontal scale and presented with a slight overlap."),
+                    p(br()),
+                ),
+                
                 fluidRow(
                     column(
                         selectInput("selected_type",
@@ -76,9 +81,38 @@ ui <-
                 plotOutput("Plot3")
             )
         ),
+
+        tabPanel(
+            "References",
+            fluidPage(
+                titlePanel("References"),
+                mainPanel(
+                    p(br()),
+                    
+                    h5("1) Data:", align = "left"),
+                    p("Elearning.tableau.com. 2020. [online] Available at: <https://elearning.tableau.com/desktop-i-fundamentals-for-tableau-10/48419/scorm/2s83epjqb5dy4#> [Accessed 27 April 2020"),
+                    
+                    p(br()),
+                    
+                    h5("2) Heatmap (Matrix):", align = "left"),
+                    p("Heatmap (Matrix). (n.d.). Retrieved from https://datavizcatalogue.com/methods/heatmap.html"),
+                    
+                    p(br()),
+                    
+                    h5("3) Bar Plot:", align = "left"),
+                    p("seaborn.barplot. (n.d.). Retrieved from https://seaborn.pydata.org/generated/seaborn.barplot.html"),
+                    
+                    p(br()),
+                    
+                    h5("4) Ridgeline Plot:", align = "left"),
+                    p("Holtz, Y., & Healy, C. (n.d.). Ridgeline plot. Retrieved from https://www.data-to-viz.com/graph/ridgeline.html"),
+                )
+            )
+        ),
+
         collapsible = TRUE
     )
-            
+   
 
 # Define server logic required to draw a histogram
 server <- function(input, output,session) {
