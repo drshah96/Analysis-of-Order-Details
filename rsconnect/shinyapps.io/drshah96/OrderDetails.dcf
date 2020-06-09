@@ -1,0 +1,12 @@
+name: OrderDetails
+title: OrderDetails
+username:
+account: drshah96
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2433575
+bundleId: 3249305
+url: https://drshah96.shinyapps.io/OrderDetails/
+when: 1591744373.8679
+asMultiple: FALSE
+asStatic: FALSE
